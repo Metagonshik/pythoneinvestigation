@@ -1,14 +1,17 @@
 from flask import Flask, redirect, request
 from parserYa import parseyandex
+from DB_maria import dbExec
+
 
 app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
     savedData = ''
-    with open('fileStorage.txt', 'r') as file:
-        while line := file.readline():
-            savedData = savedData + line.rstrip()+"<br>"
+    
+    data = dbExec('python_database', 'select * from simpleStrings')
+    for i in  range(len(data)):
+        savedData = savedData + data[i][1] + "<br>"
 
     page = f'''
     <html>
@@ -25,9 +28,13 @@ def hello_world():
 
 @app.route("/formProcess", methods=['GET','POST'])
 def formProcessing():
-    fileStorage = open('fileStorage.txt','a')
-    fileStorage.write(request.form['myText']+"\n")
-    fileStorage.close()
+    insertSql = f'''INSERT INTO
+                        python_database.simpleStrings (id, `text`)
+                    VALUES
+                        (null, "{request.form["myText"]}");'''
+
+    dbExec('python_database', insertSql)
+
     return redirect("/", code=302)
 
 

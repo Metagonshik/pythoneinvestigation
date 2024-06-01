@@ -1,7 +1,7 @@
 start project 
 
 
-    sourse .venv/bin/activate
+    source .venv/bin/activate
     flask --app app run
 
 
