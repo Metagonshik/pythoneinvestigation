@@ -11,7 +11,9 @@ def hello_world():
     
     data = dbExec('python_database', 'select * from simpleStrings')
     for i in  range(len(data)):
-        savedData = savedData + data[i][1] + "<br>"
+        savedData = savedData + '<form action="/delete_task" method="POST">' + data[i][1] +  f"""
+        <input type='hidden' name='delete_id' value='{data[i][0]}'>
+        <input type='submit' value='Удалить'></form><br>"""
 
     page = f'''
     <html>
@@ -45,3 +47,13 @@ def asdfas():
 @app.route("/yandex")
 def yandex():
     return parseyandex()
+
+@app.route("/delete_task", methods=['GET','POST'])
+def deleteForm():
+    insertSql = f'''DELETE FROM
+                        python_database.simpleStrings
+	                WHERE id={request.form["delete_id"]};'''
+
+    dbExec('python_database', insertSql)
+
+    return redirect("/", code=302)
