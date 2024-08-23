@@ -1,6 +1,5 @@
 from flask import Flask
-from flask_restful import Api, Resource, reqparse
-
+from flask_restful import Api, Resource
 app = Flask(__name__)
 api = Api()
 
@@ -13,10 +12,6 @@ class Main(Resource):
             return family
         else:
             return family[family_id]
-
-    def delete(self, family_id):
-        del family[family_id]
-        return family
 
 
 
