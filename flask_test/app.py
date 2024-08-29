@@ -54,6 +54,13 @@ def admin_login():
 
     return render_template('login_adm.html', error=error)
 
+@app.route('/logout')
+def logout():
+    # Удаление данных пользователя из сессии
+    session.clear()
+    # Перенаправление на главную страницу или страницу входа
+    return redirect(url_for('home'))
+
 # страница админ панели
 @app.route('/admin_panel')
 def admin_panel():
