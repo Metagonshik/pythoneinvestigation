@@ -17,4 +17,4 @@ def create_user(username, password):
     conn.close()
 
 # Замените 'admin' и 'your_password' на желаемые имя пользователя и пароль
-create_user('FireLegion', 'qqaz')
+create_user('Metagonshik', 'Ng554wr9')
