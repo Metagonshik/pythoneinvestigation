@@ -64,11 +64,40 @@ def logout():
 # страница админ панели
 @app.route('/admin_panel')
 def admin_panel():
-    # Загрузка и отображение админ-панели
-    # делаем доп проверку если сессия авторизации была создана 
     if 'user_id' not in session:
         return redirect(url_for('admin_login'))
-    return render_template('admin_panel.html')
+
+    conn = get_db_connection()
+    blocks = conn.execute('SELECT * FROM content').fetchall()  # Получаем все записи из таблицы content
+    conn.close()
+
+    # Преобразование данных из БД в список словарей
+    blocks_list = [dict(ix) for ix in blocks]
+    # print(blocks_list) [{строка 1 из бд},{строка 2 из бд},{строка 3 из бд}, строка 4 из бд]
+
+     # Теперь нужно сделать группировку списка в один словарь json
+    # Группировка данных в словарь JSON
+    json_data = {}
+    for raw in blocks_list:
+        # Создание новой записи, если ключ еще не существует
+        if raw['idblock'] not in json_data:
+            json_data[raw['idblock']] = []
+
+        # Добавление данных в существующий ключ
+        json_data[raw['idblock']].append({
+            'id': raw['id'],
+            'short_title': raw['short_title'],
+            'img': raw['img'],
+            'altimg': raw['altimg'],
+            'title': raw['title'],
+            'contenttext': raw['contenttext'],
+            'author': raw['author'],
+            'timestampdata': raw['timestampdata']
+        })
+
+    # print(json_data)
+    # передаем на json на фронт - далее нужно смотреть admin_panel.html и обрабатывать там
+    return render_template('admin_panel.html', json_data=json_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
