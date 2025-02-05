@@ -1,0 +1,13 @@
+{
+    "rules": [
+      {
+        "count": 10,
+        "length": 8
+      },
+      {
+        "count": 5,
+        "length": 12
+      }
+    ]
+  }
+  
